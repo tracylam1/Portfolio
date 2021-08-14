@@ -171,9 +171,52 @@ group by hotel
 --Looking at the total amount of days each guest stayed
 select stays_in_weekend_nights + stays_in_week_nights as TotalNightStays
 from portfolio..hotelbookings
+--avg days spent at each hotel type
+select hotel, avg(stays_in_weekend_nights + stays_in_week_nights) as AverageNightStays
+from portfolio..hotelbookings
+group by hotel
 
 -- Looking at what months have the most bookings
 select arrival_date_month, COUNT(arrival_date_month) as TotalReservations
 from portfolio..hotelbookings
 group by arrival_date_month
 order by TotalReservations desc
+
+select arrival_date_month, COUNT(arrival_date_month) as TotalReservations
+from portfolio..hotelbookings
+where hotel = 'City Hotel'
+group by arrival_date_month
+order by TotalReservations desc
+
+select arrival_date_month, COUNT(arrival_date_month) as TotalReservations
+from portfolio..hotelbookings
+where hotel = 'Resort Hotel'
+group by arrival_date_month
+order by TotalReservations desc
+
+--Seeing the amount of repeated guests in each hotel type
+select hotel, COUNT(RepeatedGuest) as RepeatGuest
+from portfolio..hotelbookings
+where RepeatedGuest = 'Yes'
+group by hotel
+
+-- Most common meal types in each hotel type
+select meal, count(meal) as MealTypeCount
+from portfolio..hotelbookings
+where hotel = 'City Hotel'
+group by meal
+
+select meal, count(meal) as MealTypeCount
+from portfolio..hotelbookings
+where hotel = 'Resort Hotel'
+group by meal
+
+-- How often reserved rooms differed from assigned rooms
+select hotel, COUNT(*) as CorrectRoom
+from portfolio..hotelbookings
+where reserved_room_type = assigned_room_type
+group by hotel
+
+select hotel, COUNT(*) as TotalReservations
+from portfolio..hotelbookings
+group by hotel
