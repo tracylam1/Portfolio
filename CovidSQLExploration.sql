@@ -73,3 +73,40 @@ where continent is not null
 select *, (RollingDeathCount/RollingCasesCount)*100 as RollingDeathRate
 from RateOfDeath
 ;
+
+-- Queries used for Tableau Dashboard
+
+--table with total cases, deaths, and vaccinations
+select SUM(dea.new_cases) as TotalCases, SUM(cast(dea.new_deaths as int)) as TotalDeaths,
+	SUM(cast(vac.new_vaccinations as bigint)) as TotalVaccinations
+from portfolio..CovidDeaths dea
+join portfolio..covidvaccinations vac
+	on  dea.location = vac.location
+	and dea.date = vac.date
+where dea.continent is not null
+
+--map with total cases for each location
+select location, population, MAX(total_cases) as TotalCases
+from portfolio..CovidDeaths
+where continent is not null
+group by location, population
+order by totalcases desc
+
+
+--total cases per day
+select location, population, date, new_cases, SUM(new_cases) over (partition by location order by location, date) as TotalCases
+from portfolio..CovidDeaths
+where continent is not null
+
+-- at least one vaccination in each
+select location, MAX(cast(people_vaccinated as int)) as AtLeastOneVac
+from portfolio..covidvaccinations
+where continent is not null
+group by location
+order by AtLeastOneVac desc
+
+-- total death in each continent
+select continent, SUM(cast(new_deaths as int)) as TotalDeaths
+from portfolio..coviddeaths
+where continent is not null
+group by continent
