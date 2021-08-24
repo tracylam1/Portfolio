@@ -92,7 +92,6 @@ where continent is not null
 group by location, population
 order by totalcases desc
 
-
 --total cases per day
 select location, population, date, new_cases, SUM(new_cases) over (partition by location order by location, date) as TotalCases
 from portfolio..CovidDeaths
