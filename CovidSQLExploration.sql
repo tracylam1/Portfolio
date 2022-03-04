@@ -25,7 +25,7 @@ select location, population, MAX(total_cases) as HighestCovidCases,
 	MAX((total_cases/population))*100 as CovidRate
 from portfolio..coviddeaths
 group by location, population
-order by location, population
+order by CovidRate desc
 
 -- looking at the highest death counts by each country
 select location, MAX(cast (total_deaths as int)) as HighestDeathCount
